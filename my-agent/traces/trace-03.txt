@@ -1,0 +1,45 @@
+== 실행 조건 ==
+날짜: 2026-10-12
+도구: Opencode 1.19.0 (opencode web, 브라우저 화면)
+모델: opencode/big-pickle (무료 모델)
+MCP 서버: mcp-server-qdrant (uvx --python 3.12), QDRANT_URL=:memory:
+설정 파일: qdrant-rag/opencode.json
+
+== 요청 ==
+다음 세 문장을 저장해 줘: "환불은 구매 후 7일 이내에 가능하다." "배송은 영업일 기준 2일이 걸린다." "회원 등급은 매월 1일에 갱신된다." 그리고 "환불 기한이 어떻게 돼?"와 비슷한 문장을 찾아 줘.
+
+== [1] 모델의 요청 ==
+qdrant_qdrant-store {"information": "환불은 구매 후 7일 이내에 가능하다.", "collection_name": "qdrant-rag"}
+
+== [1] 하네스의 실행 결과 ==
+Remembered: 환불은 구매 후 7일 이내에 가능하다. in collection qdrant-rag
+
+== [2] 모델의 요청 ==
+qdrant_qdrant-store {"collection_name": "qdrant-rag", "information": "배송은 영업일 기준 2일이 걸린다."}
+
+== [2] 하네스의 실행 결과 ==
+Remembered: 배송은 영업일 기준 2일이 걸린다. in collection qdrant-rag
+
+== [3] 모델의 요청 ==
+qdrant_qdrant-store {"collection_name": "qdrant-rag", "information": "회원 등급은 매월 1일에 갱신된다."}
+
+== [3] 하네스의 실행 결과 ==
+Remembered: 회원 등급은 매월 1일에 갱신된다. in collection qdrant-rag
+
+== [4] 모델의 요청 ==
+qdrant_qdrant-find {"collection_name": "qdrant-rag", "query": "환불 기한이 어떻게 돼?"}
+
+== [4] 하네스의 실행 결과 ==
+[
+  "Results for the query '환불 기한이 어떻게 돼?'",
+  "<entry><content>환불은 구매 후 7일 이내에 가능하다.</content><metadata></metadata></entry>",
+  "<entry><content>회원 등급은 매월 1일에 갱신된다.</content><metadata></metadata></entry>",
+  "<entry><content>배송은 영업일 기준 2일이 걸린다.</content><metadata></metadata></entry>"
+]
+
+== 결과를 읽은 최종 답 ==
+세 문장을 저장했고, 유사 문장 검색 결과입니다.
+
+가장 유사: **"환불은 구매 후 7일 이내에 가능하다."** (환불 관련 — 질의에 정확히 대응)
+
+나머지는 부차적 결과입니다: "회원 등급은 매월 1일에 갱신된다.", "배송은 영업일 기준 2일이 걸린다."
